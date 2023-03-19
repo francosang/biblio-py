@@ -1,25 +1,9 @@
-def start():
-    show_main_menu()
+import sqlite3
+from model.author import Author
+from repository.author_repository import AuthorRepository
 
-def show_main_menu():
-    while True:
-        print("+-------------------------------+")
-        print("|           Main Menu           |")
-        print("+-------------------------------+")
-        print("Select an option\n")
-        print("\tA) Manage Authors")
-        print("\tB) Manage Books")    
-        print("\tQ) Exit")    
-        print("\nType an option > ")
-
-        option = input()
-        match option:
-            case "A" | "a" | "1":
-                show_authors_menu()
-            case "B" | "b" | "2":
-                ... 
-            case "Q" | "q":
-                exit(0)
+con = sqlite3.connect("biblo.db")
+author_repository = AuthorRepository(con)
 
 def show_authors_menu():
     while True:
@@ -50,7 +34,20 @@ def show_find_author():
     print("+-------------------------------+")
     print("|          Find Author          |")
     print("+-------------------------------+")
-    print("\nType an author's name > ")
+
+    name = input("Name > ")
+
+    authors = author_repository.findByName(name)
+
+    print(f"---- Results: {len(authors)} ----")
+
+    for a in authors:
+        print(a.name)
+        print(f'\t{a.country}')
+        print(f'\t{a.born}\n')
+    
+    name = input("Press Enter to continue...")
+
 
 def show_add_author():
     print("+-------------------------------+")
@@ -61,3 +58,7 @@ def show_add_author():
     name = input("Name > ")
     country = input("Country > ")
     born = input("Born date > ")
+
+    author = Author(name, country, born)
+
+    author_repository.save(author)
