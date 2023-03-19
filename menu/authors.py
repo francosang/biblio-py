@@ -25,7 +25,9 @@ def show_authors_menu():
                 show_find_author()
             case "A" | "a" | "2":
                 show_add_author()
-            case "B" | "b" | "3":
+            case "E" | "e" | "3":
+                show_edit_author(None)
+            case "B" | "b" | "4":
                 break
             case "Q" | "q":
                 exit(0)
@@ -76,12 +78,22 @@ def show_details(id):
         case "Q" | "q":
             exit(0)
 
-def show_edit_author(id):
-    a = author_repository.get_by_id(id)
-
+def show_edit_author(id: int | None):
     print("+-------------------------------+")
     print("|          Edit Author          |")
     print("+-------------------------------+")
+
+    if id == None:
+        while True:
+            try:
+                id = int(input(f"Enter the Author's id to edit: "))
+                break
+            except:
+                print("The id should be a number")
+
+    a = author_repository.get_by_id(id)
+
+
     print("")
     name = input(f"Name ({a.name}): ")
     country = input(f"Country ({a.country}): ")
