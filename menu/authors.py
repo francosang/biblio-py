@@ -42,12 +42,57 @@ def show_find_author():
     print(f"---- Results: {len(authors)} ----")
 
     for a in authors:
-        print(a.name)
-        print(f'\t{a.country}')
-        print(f'\t{a.born}\n')
+        print(f'\t{a.id} - {a.name}')
     
-    name = input("Press Enter to continue...")
+    value = input("Introduce an ID to see details or Enter to go back...")
 
+    try: 
+        id = int(value)
+        show_details(id)
+    except Exception as e:
+        print(e)
+        pass
+
+def show_details(id):
+    a = author_repository.get_by_id(id)
+
+    print("+-------------------------------+")
+    print("|         Author Details        |")
+    print("+-------------------------------+")
+    print("")
+    print(f"Name: {a.name}")
+    print(f"Country: {a.country}")
+    print(f"Born date: {a.born}")
+    print("")
+    print("Select an option\n")
+    print("\tE) Edit")    
+    print("\tB) Back")
+    print("\nType an option > ")
+
+    option = input()
+    match option:
+        case "E" | "e" | "1":
+            show_edit_author(id)
+        case "Q" | "q":
+            exit(0)
+
+def show_edit_author(id):
+    a = author_repository.get_by_id(id)
+
+    print("+-------------------------------+")
+    print("|          Edit Author          |")
+    print("+-------------------------------+")
+    print("")
+    name = input(f"Name ({a.name}): ")
+    country = input(f"Country ({a.country}): ")
+    born = input(f"Born ({a.born}): ")
+
+    name = name if name else a.name
+    country = country if country else a.country
+    born = born if born else a.born
+
+    author = Author(name, country, born)
+    author_repository.update(id, author)
 
 def show_add_author():
     print("+-------------------------------+")
@@ -60,5 +105,4 @@ def show_add_author():
     born = input("Born date > ")
 
     author = Author(name, country, born)
-
-    author_repository.save(author)
+    author_repository.insert(author)
