@@ -31,7 +31,7 @@ class AuthorRepository():
         )
         self.db.commit()
 
-    def findByName(self, name: str) -> list[Author]:
+    def find_by_name(self, name: str) -> list[Author]:
         cursor = self.db.cursor()
         cursor.execute(f"select * from author where name like '%{name}%'")
         result = cursor.fetchall()
@@ -46,3 +46,22 @@ class AuthorRepository():
         cursor.execute(f"select * from author where id = {id}")
         result = cursor.fetchone()
         return Author.with_id(result[0], result[1], result[2], result[3])
+
+    def delete(self, id):
+        self.db.execute(
+            f"""
+            DELETE FROM author
+            WHERE id = {id};
+            """
+        )
+        self.db.commit() 
+
+    def get_list(self):
+        cursor = self.db.cursor()
+        cursor.execute(f"select * from author")
+        result = cursor.fetchall()
+
+        def to_author(tuple):
+            return Author.with_id(tuple[0], tuple[1], tuple[2], tuple[3])
+
+        return list(map(to_author, result))

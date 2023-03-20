@@ -27,10 +27,39 @@ def show_authors_menu():
                 show_add_author()
             case "E" | "e" | "3":
                 show_edit_author(None)
-            case "B" | "b" | "4":
+            case "D" | "d" | "4":
+                show_delete_author(None)
+            case "L" | "l" | "5":
+                show_list_authors()
+            case "B" | "b" | "6":
                 break
             case "Q" | "q":
                 exit(0)
+
+def show_list_authors():
+    print("+-------------------------------+")
+    print("|          List Authors         |")
+    print("+-------------------------------+")
+
+    authors = author_repository.get_list()
+
+    print(f"---- Results: {len(authors)} ----")
+
+    for a in authors:
+        print(f'\t{a.id} - {a.name}')
+
+    print("")
+    print("Options:")
+    print("\tPress Intro to go back")
+    print("\tEnter ID to see details >")
+    
+    value = input("")
+
+    try: 
+        id = int(value)
+        show_details(id)
+    except Exception as e:
+        pass
 
 def show_find_author():
     print("+-------------------------------+")
@@ -39,20 +68,24 @@ def show_find_author():
 
     name = input("Name > ")
 
-    authors = author_repository.findByName(name)
+    authors = author_repository.find_by_name(name)
 
     print(f"---- Results: {len(authors)} ----")
 
     for a in authors:
         print(f'\t{a.id} - {a.name}')
+
+    print("")
+    print("Options:")
+    print("\tPress Intro to go back")
+    print("\tEnter ID to see details >")
     
-    value = input("Introduce an ID to see details or Enter to go back...")
+    value = input()
 
     try: 
         id = int(value)
         show_details(id)
     except Exception as e:
-        print(e)
         pass
 
 def show_details(id):
@@ -68,6 +101,7 @@ def show_details(id):
     print("")
     print("Select an option\n")
     print("\tE) Edit")    
+    print("\tD) Delete")    
     print("\tB) Back")
     print("\nType an option > ")
 
@@ -75,8 +109,37 @@ def show_details(id):
     match option:
         case "E" | "e" | "1":
             show_edit_author(id)
+        case "D" | "d" | "2":
+            show_delete_author(id)
         case "Q" | "q":
             exit(0)
+
+def show_delete_author(id: int | None):
+    print("+-------------------------------+")
+    print("|         Delete Author         |")
+    print("+-------------------------------+")
+
+    if id == None:
+        while True:
+            try:
+                id = int(input(f"Enter the Author's id to delete: "))
+                break
+            except:
+                print("The id should be a number")
+
+    a = author_repository.get_by_id(id)
+
+    print(f"Name: {a.name}")
+    print(f"Country: {a.country}")
+    print(f"Born: {a.born}")
+    print("")
+    print("Confirm delete?")
+    print("\tYes")
+    print("\tPress enter to go back")
+
+    option = input().lower()
+    if option == "yes":
+        author_repository.delete(id)
 
 def show_edit_author(id: int | None):
     print("+-------------------------------+")
@@ -92,7 +155,6 @@ def show_edit_author(id: int | None):
                 print("The id should be a number")
 
     a = author_repository.get_by_id(id)
-
 
     print("")
     name = input(f"Name ({a.name}): ")
