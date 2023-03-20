@@ -4,7 +4,7 @@ from model.author import Author
 class AuthorRepository():
     def __init__(self, db: Connection) -> None:
         self.db =  db
-
+        
     def insert(self, author: Author):
         self.db.execute(
             f"""

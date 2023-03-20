@@ -1,6 +1,8 @@
 import menu.authors
 import menu.books
-from repository.author_repository import AuthorRepository
+from globals import author_repository
+
+author_repository.find_by_name("lol")
 
 def show_main_menu():
     while True:
@@ -19,5 +21,5 @@ def show_main_menu():
                 menu.authors.show_authors_menu()
             case "B" | "b" | "2":
                 menu.books.show_books_menu()
-            case "Q" | "q":
+            case "Q" | "q" | "3":
                 exit(0)

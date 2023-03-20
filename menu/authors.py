@@ -1,9 +1,5 @@
-import sqlite3
 from model.author import Author
-from repository.author_repository import AuthorRepository
-
-con = sqlite3.connect("biblo.db")
-author_repository = AuthorRepository(con)
+from globals import author_repository
 
 def show_authors_menu():
     while True:
@@ -11,6 +7,7 @@ def show_authors_menu():
         print("|         Authors Menu          |")
         print("+-------------------------------+")
         print("Select an option\n")
+        print("\tV) View")    
         print("\tF) Find")    
         print("\tA) Add")    
         print("\tE) Edit")    
@@ -21,20 +18,38 @@ def show_authors_menu():
 
         option = input()
         match option:
-            case "F" | "f" | "1":
+            case "V" | "v" | "1":
+                show_view_author()            
+            case "F" | "f" | "2":
                 show_find_author()
-            case "A" | "a" | "2":
+            case "A" | "a" | "3":
                 show_add_author()
-            case "E" | "e" | "3":
+            case "E" | "e" | "4":
                 show_edit_author(None)
-            case "D" | "d" | "4":
+            case "D" | "d" | "5":
                 show_delete_author(None)
-            case "L" | "l" | "5":
+            case "L" | "l" | "6":
                 show_list_authors()
-            case "B" | "b" | "6":
+            case "B" | "b" | "7":
                 break
             case "Q" | "q":
                 exit(0)
+
+def show_view_author():
+    print("+-------------------------------+")
+    print("|          View Author         |")
+    print("+-------------------------------+")
+
+    int("caca")
+    while True:
+        try:
+            id = int(input("Enter the Author's id to view: "))
+            show_details(id)
+            return
+        except Exception as e:
+            print(e)
+            print("The id should be a number")
+
 
 def show_list_authors():
     print("+-------------------------------+")
@@ -123,6 +138,7 @@ def show_delete_author(id: int | None):
         while True:
             try:
                 id = int(input(f"Enter the Author's id to delete: "))
+                print("")
                 break
             except:
                 print("The id should be a number")
