@@ -1,8 +1,5 @@
 import menu.authors
 import menu.books
-from globals import author_repository
-
-author_repository.find_by_name("lol")
 
 def show_main_menu():
     while True:

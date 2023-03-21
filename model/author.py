@@ -5,8 +5,8 @@ class Author():
         self.name = name
         self.country = country
         self.born = born
-
-    def with_id(id, name, country, born):
-        auth =  Author(name, country, born)
-        auth.id = id
+    
+    def build(tuple):
+        auth =  Author(tuple[1], tuple[2], tuple[3])
+        auth.id = tuple[0]
         return auth

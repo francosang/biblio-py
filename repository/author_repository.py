@@ -3,7 +3,7 @@ from model.author import Author
 
 class AuthorRepository():
     def __init__(self, db: Connection) -> None:
-        self.db =  db
+        self.db = db
         
     def insert(self, author: Author):
         self.db.execute(
@@ -35,11 +35,7 @@ class AuthorRepository():
         cursor = self.db.cursor()
         cursor.execute(f"select * from author where name like '%{name}%'")
         result = cursor.fetchall()
-
-        def to_author(tuple):
-            return Author.with_id(tuple[0], tuple[1], tuple[2], tuple[3])
-
-        return list(map(to_author, result))
+        return list(map(Author.build, result))
     
     def get_by_id(self, id):
         cursor = self.db.cursor()
@@ -60,8 +56,4 @@ class AuthorRepository():
         cursor = self.db.cursor()
         cursor.execute(f"select * from author")
         result = cursor.fetchall()
-
-        def to_author(tuple):
-            return Author.with_id(tuple[0], tuple[1], tuple[2], tuple[3])
-
-        return list(map(to_author, result))
+        return list(map(Author.build, result))
