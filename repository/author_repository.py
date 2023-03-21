@@ -31,18 +31,6 @@ class AuthorRepository():
         )
         self.db.commit()
 
-    def find_by_name(self, name: str) -> list[Author]:
-        cursor = self.db.cursor()
-        cursor.execute(f"select * from author where name like '%{name}%'")
-        result = cursor.fetchall()
-        return list(map(Author.build, result))
-    
-    def get_by_id(self, id):
-        cursor = self.db.cursor()
-        cursor.execute(f"select * from author where id = {id}")
-        result = cursor.fetchone()
-        return Author.with_id(result[0], result[1], result[2], result[3])
-
     def delete(self, id):
         self.db.execute(
             f"""
@@ -52,8 +40,29 @@ class AuthorRepository():
         )
         self.db.commit() 
 
+    def find_by_name(self, name: str) -> list[Author]:
+        try:
+            cursor = self.db.cursor()
+            cursor.execute(f"select * from author where name like '%{name}%'")
+            result = cursor.fetchall()
+            return list(map(Author.build, result))
+        finally:
+            cursor.close()
+    
+    def get_by_id(self, id):
+        try:
+            cursor = self.db.cursor()
+            cursor.execute(f"select * from author where id = {id}")
+            result = cursor.fetchone()
+            return Author.build(result)
+        finally:
+            cursor.close()
+
     def get_list(self):
-        cursor = self.db.cursor()
-        cursor.execute(f"select * from author")
-        result = cursor.fetchall()
-        return list(map(Author.build, result))
+        try:
+            cursor = self.db.cursor()
+            cursor.execute(f"select * from author")
+            result = cursor.fetchall()
+            return list(map(Author.build, result))
+        finally:
+            cursor.close()
